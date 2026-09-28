@@ -46,7 +46,7 @@ RC.subjects.push({
       ]),
     ] },
     /* ---------------- MACBETH ---------------- */
-    { id: 'lMac', book: 'macbeth', title: 'Macbeth', emoji: '🗡️', blurb: 'A brave soldier + a prophecy + ambition = murder, guilt and doom.', tag: 'exam', tagText: 'Paper 1', lessons: [
+    { id: 'lMac', book: 'macbeth', facts: ["Macbeth changes from a brave, loyal soldier (\"brave Macbeth\") into an ambitious murderer, then a paranoid tyrant who kills more and more people (Banquo, Macduff's family) to stay king. By the end he feels life is meaningless (\"Tomorrow, and tomorrow, and tomorrow\").", "Lady Macbeth starts strong and controlling: she pushes Macbeth to kill Duncan and questions his manhood. Guilt then breaks her: she sleepwalks, tries to wash invisible blood off her hands (\"Out, damned spot!\") and dies.", "The witches' prophecies spark Macbeth's ambition, but he chooses to act on them. Banquo hears prophecies too and does nothing wrong, so he is a foil (contrast) to Macbeth.", "Key themes in Macbeth: ambition, guilt, the supernatural, kingship (a good king like Duncan vs a tyrant), and appearance vs reality.", "Macbeth context: written around 1606 for King James I, who believed in witchcraft. The Gunpowder Plot (1605) made killing a king (regicide) especially shocking, and people believed in the Divine Right of Kings."],  title: 'Macbeth', emoji: '🗡️', blurb: 'A brave soldier + a prophecy + ambition = murder, guilt and doom.', tag: 'exam', tagText: 'Paper 1', lessons: [
       LS('mac-plot', 'Macbeth: the story', '📜', ['Witches → prophecy → Duncan murdered → Banquo murdered → Macduff\'s family murdered → Macbeth killed.'], [
         mc(1, 'Who does Macbeth meet at the very start?', 'Three witches', ['King Duncan', 'A ghost', 'Macduff'], 'The witches predict that Macbeth will be king.'),
         mc(1, 'Who does Macbeth murder to become king?', 'King Duncan', ['Banquo', 'Malcolm', 'Macduff'], 'He kills Duncan in his sleep, at Macbeth\'s own castle.'),
@@ -89,7 +89,7 @@ RC.subjects.push({
       ]),
     ] },
     /* ---------------- ROMEO & JULIET ---------------- */
-    { id: 'lRJ', book: 'rj', title: 'Romeo and Juliet', emoji: '💘', blurb: 'Two teenagers from enemy families fall in love — and it ends in tragedy.', tag: 'exam', tagText: 'Paper 1', lessons: [
+    { id: 'lRJ', book: 'rj', facts: ["Romeo changes from a lovesick boy moping over Rosaline into someone who risks everything for Juliet. He is impulsive and acts fast, for example killing Tybalt and taking poison.", "Juliet changes from an obedient daughter (nearly 14) into a brave, independent young woman who defies her parents to stay loyal to Romeo.", "Why do Romeo and Juliet die? Fate (they are \"star-crossed\"), the family feud, rushed decisions, adults' mistakes (Capulet forcing her to marry Paris, the Friar's risky plan) and bad luck (the letter never reaches Romeo).", "Key themes in Romeo and Juliet: love, conflict and violence, fate, family and parents, youth vs age. Context: in Elizabethan times fathers controlled who daughters married, and family honour mattered."],  title: 'Romeo and Juliet', emoji: '💘', blurb: 'Two teenagers from enemy families fall in love — and it ends in tragedy.', tag: 'exam', tagText: 'Paper 1', lessons: [
       LS('rj-plot', 'R&J: the story', '📜', ['Party → love → secret wedding → Tybalt kills Mercutio → Romeo kills Tybalt → banished → fake death → both die.'], [
         mc(1, 'Where is the play set?', 'Verona, Italy', ['London', 'Scotland', 'Paris'], 'Verona — a city torn by a family feud.'),
         mc(1, 'Which two families are enemies?', 'Montagues and Capulets', ['Birlings and Crofts', 'Macbeths and Macduffs', 'Smiths and Joneses'], 'Romeo is a Montague; Juliet is a Capulet.'),
@@ -130,7 +130,7 @@ RC.subjects.push({
       ]),
     ] },
     /* ---------------- A CHRISTMAS CAROL ---------------- */
-    { id: 'lACC', book: 'acc', title: 'A Christmas Carol', emoji: '👻', blurb: 'A mean old man is visited by ghosts and learns to be kind.', tag: 'exam', tagText: 'Paper 1', lessons: [
+    { id: 'lACC', book: 'acc', facts: ["Scrooge changes because the three ghosts show him his lonely past, the suffering of poor families like the Cratchits (and ill Tiny Tim) in the present, and his own lonely, unmourned death in the future. Seeing the results of his greed makes him regret it and become generous. This is called redemption.", "At the start Scrooge is cold, mean and selfish (\"Bah! Humbug!\", \"solitary as an oyster\"). At the end he is generous and joyful: he buys the Cratchits a huge turkey, raises Bob's pay and becomes a \"second father\" to Tiny Tim.", "Marley's ghost warns Scrooge to change. Marley's heavy chain stands for the greed and selfishness of his life.", "Dickens's message in A Christmas Carol: rich people have a social responsibility to help the poor. He wrote it in 1843 because of Victorian poverty, workhouses and child labour."],  title: 'A Christmas Carol', emoji: '👻', blurb: 'A mean old man is visited by ghosts and learns to be kind.', tag: 'exam', tagText: 'Paper 1', lessons: [
       LS('acc-plot', 'ACC: the story', '📜', ['5 staves (chapters): Marley → Past → Present → Yet to Come → Scrooge changed.'], [
         mc(1, 'What is Scrooge like at the start?', 'Mean, cold and selfish', ['Kind and generous', 'Poor and hungry', 'Young and happy'], '"Bah! Humbug!" He hates Christmas and giving money.'),
         mc(1, 'Whose ghost visits first?', 'Jacob Marley, his dead business partner', ['Tiny Tim', 'Fred', 'Belle'], 'Marley wears heavy chains — warning Scrooge to change.'),
@@ -170,7 +170,7 @@ RC.subjects.push({
       ]),
     ] },
     /* ---------------- JEKYLL & HYDE ---------------- */
-    { id: 'lJH', book: 'jh', title: 'Jekyll and Hyde', emoji: '🧪', blurb: 'A respected doctor creates a potion that unleashes his evil side.', tag: 'exam', tagText: 'Paper 1', lessons: [
+    { id: 'lJH', book: 'jh', facts: ["Dr Jekyll is a respected doctor who secretly wants to enjoy his bad side. His potion turns him into Hyde, his evil side. Hyde grows stronger until Jekyll turns into Hyde without the potion and cannot change back. At the end Hyde's body is found and Jekyll's letter explains everything.", "Mr Hyde is small, ugly and \"ape-like\". People feel disgust when they see him. He tramples a young girl and murders Sir Danvers Carew with a cane.", "Key themes in Jekyll and Hyde: duality (good and evil in everyone), reputation and secrecy, science vs religion, and violence. Context: 1886, Victorian London, where gentlemen had to seem respectable, and Darwin's ideas made people fear humans had an animal side.", "Mr Utterson is a lawyer who investigates Hyde. The truth is only revealed at the end, in Dr Lanyon's letter and Jekyll's own statement."],  title: 'Jekyll and Hyde', emoji: '🧪', blurb: 'A respected doctor creates a potion that unleashes his evil side.', tag: 'exam', tagText: 'Paper 1', lessons: [
       LS('jh-plot', 'J&H: the story', '📜', ['Utterson investigates → Hyde\'s crimes → Carew murder → Lanyon\'s shock → Jekyll\'s confession.'], [
         mc(1, 'Who is the main detective-like character?', 'Mr Utterson, a lawyer', ['Dr Lanyon', 'Poole', 'Sir Danvers Carew'], 'We follow Utterson as he tries to solve the mystery.'),
         mc(1, 'What does Hyde do in the first story Enfield tells?', 'Tramples over a young girl', ['Robs a bank', 'Kills a policeman', 'Saves a child'], 'He walks right over her — a shocking, cold act.'),
@@ -206,7 +206,7 @@ RC.subjects.push({
       ]),
     ] },
     /* ---------------- AN INSPECTOR CALLS ---------------- */
-    { id: 'lAIC', book: 'aic', title: 'An Inspector Calls', emoji: '🕵️', blurb: 'A rich family\'s party is interrupted — and each of them helped destroy a young woman.', tag: 'exam', tagText: 'Paper 2', lessons: [
+    { id: 'lAIC', book: 'aic', facts: ["Inspector Goole visits the Birlings in 1912 and shows that each of them helped cause Eva Smith's death. He acts like Priestley's voice and like the family's conscience. At the end they learn there is no Inspector Goole on the police force, so he may not be a real policeman, then a phone call says a girl has died and an inspector is coming.", "Mr and Mrs Birling refuse to change or accept responsibility. Sheila and Eric (the younger generation) accept their part and change. Gerald is in between: he feels some regret but tries to wriggle out at the end.", "Priestley's message in An Inspector Calls: we are all responsible for each other (\"We are members of one body\"). He was a socialist. The play is set in 1912 but was written in 1945, so the audience knew Mr Birling was wrong about the Titanic and war (dramatic irony)."],  title: 'An Inspector Calls', emoji: '🕵️', blurb: 'A rich family\'s party is interrupted — and each of them helped destroy a young woman.', tag: 'exam', tagText: 'Paper 2', lessons: [
       LS('aic-plot', 'AIC: the story', '📜', ['Set in 1912, written in 1945.', 'Each Birling (and Gerald) is linked to Eva Smith\'s death.'], [
         mc(1, 'What are the Birlings celebrating at the start?', 'Sheila\'s engagement to Gerald', ['A birthday', 'Christmas', 'A new factory'], 'It all seems happy — until the doorbell rings.'),
         mc(1, 'Who arrives at the house?', 'Inspector Goole', ['A doctor', 'The Prime Minister', 'Eva Smith'], 'He says a young woman has died.'),
@@ -243,7 +243,7 @@ RC.subjects.push({
       ]),
     ] },
     /* ---------------- POWER & CONFLICT ---------------- */
-    { id: 'lPC', book: 'pc', title: 'Power and Conflict poems', emoji: '⚔️', blurb: '15 poems about power (of people and nature) and conflict (war and its effects).', tag: 'exam', tagText: 'Paper 2', lessons: [
+    { id: 'lPC', book: 'pc', facts: ["The Power and Conflict poems are about the power of humans (Ozymandias, My Last Duchess, London, Tissue, Checking Out Me History), the power of nature (The Prelude, Storm on the Island, Exposure) and the effects of war and conflict (Charge of the Light Brigade, Bayonet Charge, Remains, Poppies, War Photographer, Kamikaze, The Emigrée)."],  title: 'Power and Conflict poems', emoji: '⚔️', blurb: '15 poems about power (of people and nature) and conflict (war and its effects).', tag: 'exam', tagText: 'Paper 2', lessons: [
       LS('pc-who', 'Poems & poets', '🖋️', ['Learn which poet wrote which poem — you can name them in the exam.'], [
         mt(1, 'Match the poem to its poet', [['Ozymandias', 'Shelley'], ['London', 'Blake'], ['Remains', 'Armitage'], ['Exposure', 'Owen']]),
         mt(2, 'Match the poem to its poet', [['Kamikaze', 'Garland'], ['Poppies', 'Weir'], ['Tissue', 'Dharker'], ['The Emigrée', 'Rumens']]),

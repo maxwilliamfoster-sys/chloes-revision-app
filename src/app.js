@@ -177,17 +177,18 @@ function missCount() { return Object.keys(state.miss).filter((k) => state.miss[k
 /* ============================================================
    Views
    ============================================================ */
-const ICON = { home: '🏠', practice: '🎯', progress: '📈', settings: '⚙️' };
+const ICON = { home: '🏠', practice: '🎯', ask: '🤖', progress: '📈', settings: '⚙️' };
 function renderTop() {
   const s = streak(), d = day();
   $('#top').innerHTML = `<div class="top-in">
     <a class="logo" href="#/home"><i>C</i>Chloe's Revision</a>
+    ${navigator.onLine ? '' : '<span class="offpill" title="No internet — everything still works">📴 Offline</span>'}
     <span class="stat fire ${d.n ? '' : 'off'}" title="Day streak">🔥 ${s}</span>
     <span class="stat xp" id="xpstat" title="Total XP">⚡ ${state.xp}</span></div>`;
 }
 function renderNav(cur) {
-  const items = [['home', 'Home'], ['practice', 'Practice'], ['progress', 'Progress'], ['settings', 'Settings']];
-  $('#nav').innerHTML = '<div class="nav-in">' + items.map(([k, t]) => `<a href="#/${k}" ${cur === k ? 'aria-current="page"' : ''}><span>${ICON[k]}</span>${t}</a>`).join('') + '</div>';
+  const items = [['home', 'Home'], ['practice', 'Practice'], ['ask', 'Ask'], ['progress', 'Progress'], ['settings', 'Settings']];
+  $('#nav').innerHTML = '<div class="nav-in">' + items.map(([k, t]) => k === 'ask' ? `<a href="#" data-act="ask"><span>${ICON[k]}</span>${t}</a>` : `<a href="#/${k}" ${cur === k ? 'aria-current="page"' : ''}><span>${ICON[k]}</span>${t}</a>`).join('') + '</div>';
 }
 function route() {
   const h = location.hash.replace(/^#\/?/, '') || 'home';
@@ -214,6 +215,7 @@ function viewHome() {
     const r = rec(nx.id), lvl = Math.min(3, r.lvl + 1);
     h += `<div class="sect"><div class="next s-${ns.id}"><span class="k">NEXT UP · ${esc(ns.name.toUpperCase())}</span><h2>${nx.emoji || ns.emoji} ${esc(nx.title)}</h2><p class="small">${esc(nx.unit.title)} · Level ${lvl} of 3 · about 3 min</p><button class="btn full" data-act="start" data-id="${nx.id}">Start lesson ▶</button></div></div>`;
   }
+  h += `<div class="sect"><button class="card row askcard" data-act="ask"><span class="emo">🤖</span><span class="grow"><b>Stuck? Ask my assistant</b><br><span class="muted small">Type a question or snap a photo 📷 — works with no Wi-Fi.</span></span><span>›</span></button></div>`;
   if (!state.settings.lit) h += `<div class="sect"><button class="card row s-englit" data-act="books" style="text-align:left;cursor:pointer;border-color:var(--purple)"><span class="emo">📚</span><span class="grow"><b>Pick your English books</b><br><span class="muted small">Tell the app which books and poems your class studies.</span></span><span>›</span></button></div>`;
   if (m) h += `<div class="sect"><button class="btn full yellow" data-act="mistakes">🛠️ Fix my mistakes (${m})</button></div>`;
   h += `<div class="sect"><h2>My subjects</h2><div class="subs">` + RC.subjects.map((s) => {
@@ -321,6 +323,8 @@ function viewSettings() {
     <label class="switch"><span><b>🎵 Sounds</b></span><input type="checkbox" data-act="tog" data-k="sound" ${st.sound ? 'checked' : ''}></label>
     <label class="switch"><span><b>🧃 Brain-break reminders</b><br><span class="muted small">A nudge to stretch after a couple of lessons.</span></span><input type="checkbox" data-act="tog" data-k="breaks" ${st.breaks ? 'checked' : ''}></label></div>`;
   h += `<div class="sect setrow"><h3>Reading voice speed</h3>${seg('rate', [[0.75, 'Slow'], [0.9, 'Normal'], [1.05, 'Fast']])}<button class="btn sm" data-act="testvoice" style="align-self:flex-start">🔊 Test the voice</button></div>`;
+  h += `<div class="sect setrow"><h3>📴 Offline (for school)</h3><div id="aistatus" class="stack"><p class="muted small">Checking…</p></div></div>`;
+  setTimeout(fillOfflineStatus, 0);
   h += `<div class="sect setrow"><h3>English books</h3><button class="btn" data-act="books">📚 Choose my books and poems</button></div>`;
   h += `<div class="sect setrow"><h3>Back up my progress</h3><p class="muted small">Progress lives on this phone/laptop. Copy this code somewhere safe (or send it to yourself) — paste it back to restore, or to move to another device.</p>
     <div class="row"><button class="btn sm blue" data-act="backup">📋 Copy backup code</button><button class="btn sm" data-act="download">💾 Save file</button></div>
@@ -499,7 +503,7 @@ function check() {
   // wrong: always spell out the right answer (the green option can be easy to miss)
   const ansLine = ok ? '' : q.t === 'tf' ? `<p class="fb-why"><b>It's ${esc(ans)}.</b></p>` : `<p class="fb-why"><b>Answer:</b> ${esc(ans)}</p>`;
   const why = q.why ? `<p class="fb-why">${esc(q.why)}</p>` : '';
-  foot.innerHTML = `<div class="foot-in"><div class="fb-h"><span>${ok ? '✅' : '💛'}</span><span class="grow">${ok ? pickOne(PRAISE) : pickOne(NUDGE)}</span>${q.why || !ok ? '<button class="iconbtn" data-act="say-fb" aria-label="Read explanation">🔊</button>' : ''}</div>${ansLine}${why}<button class="btn full go" data-act="next">Continue</button></div>`;
+  foot.innerHTML = `<div class="foot-in"><div class="fb-h"><span>${ok ? '✅' : '💛'}</span><span class="grow">${ok ? pickOne(PRAISE) : pickOne(NUDGE)}</span>${q.why || !ok ? '<button class="iconbtn" data-act="say-fb" aria-label="Read explanation">🔊</button>' : ''}</div>${ansLine}${why}${ok ? '' : '<button class="btn full" data-act="ask-about">🤖 Help me understand this</button>'}<button class="btn full go" data-act="next">Continue</button></div>`;
   foot._say = (ok ? '' : 'The answer is ' + ans + '. ') + (q.why || '');
   if (ok) { Sound.correct(); buzz(12); confetti({ n: 30, spread: 10, y: innerHeight - 160 }); }
   else { Sound.wrong(); buzz([20, 40, 20]); $('.sess-body').classList.add('shake'); }
@@ -638,13 +642,33 @@ function matchTap(b, side) {
   }
 }
 document.addEventListener('keydown', (e) => {
-  if (!sess || $('#session').hidden) return;
+  if (!sess || $('#session').hidden || ($('#ask') && !$('#ask').hidden)) return;
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   const q = sess.qs[sess.i];
   if (e.key === 'Enter') { if (sess.done) return; if (sess.checked) { $('[data-act="next"]').click(); } else if (!$('#checkbtn').disabled) check(); e.preventDefault(); }
   else if (q && !sess.checked && (q.t === 'mc') && /^[1-4]$/.test(e.key)) { const o = $$('.opt[data-act="pick"]')[+e.key - 1]; if (o) o.click(); }
 });
 
-/* ---------- go ---------- */
-applyLook();
-route();
+/* ---------- offline status (Settings) ---------- */
+async function fillOfflineStatus() {
+  const el = $('#aistatus'); if (!el) return;
+  const has = async (u) => { try { return !!(window.caches && await caches.match(new URL(u, location.href).href)); } catch (e) { return false; } };
+  const sw = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+  const [app, ocr, lib] = await Promise.all([has('index.html').then((x) => x || has('./')), has('ocr/lang/eng.traineddata.gz'), has('ai/webllm.js')]);
+  if (typeof aiRefresh === 'function') await aiRefresh();
+  const row = (ok, t, sub) => `<div class="switch" style="cursor:default"><span><b>${ok ? '✅' : '⏳'} ${t}</b>${sub ? `<br><span class="muted small">${sub}</span>` : ''}</span></div>`;
+  const st = AI.status, m = state.settings.aiModel && AI_MODELS[state.settings.aiModel];
+  const brainTxt = st === 'nogpu' ? 'Not supported on this device (needs WebGPU). Maths solver, photos and lesson search still work offline.' : st === 'ready' ? `${m.name} brain is on and saved on this device.` : st === 'cached' ? `${m.name} brain is saved on this device (wakes up when you open Ask).` : st === 'downloading' ? `Downloading… ${Math.round(AI.progress * 100)}%` : 'Not downloaded yet — open 🤖 Ask at home on Wi-Fi to switch it on.';
+  el.innerHTML = row(sw && app, 'App & all lessons', sw && app ? 'Saved — works with no internet.' : 'Open the app once with internet to save it.')
+    + row(ocr && lib, 'Assistant tools (maths solver, photo reader)', ocr && lib ? 'Saved on this device.' : 'Saving in the background while online…')
+    + row(st === 'ready' || st === 'cached', 'Offline AI brain', brainTxt)
+    + (st === 'ready' || st === 'cached' ? '<button class="btn sm" data-act="ai-delete" style="align-self:flex-start">🗑️ Remove the brain (frees space)</button>' : st !== 'nogpu' ? '<button class="btn sm pink" data-act="ask" style="align-self:flex-start">🧠 Set up the brain</button>' : '')
+    + '<p class="muted tiny">On an iPhone, add the app to your Home Screen (Share → Add to Home Screen) so it keeps everything saved.</p>';
+}
+window.addEventListener('online', () => renderTop());
+window.addEventListener('offline', () => renderTop());
+if ('serviceWorker' in navigator && /^https?:/.test(location.protocol)) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+
+/* (start-up lives at the end of assist.js so every part is loaded first) */
