@@ -297,3 +297,21 @@ textarea.code{width:100%;min-height:90px;border-radius:14px;border:2px solid var
 .notes{background:var(--blue-t);border-radius:12px;padding:6px 10px;font-size:.86em}
 .notes summary{cursor:pointer;font-weight:700;color:var(--blue-d)}
 .notes ul{margin-top:6px}
+.diag{white-space:pre-wrap;word-break:break-word;font:11px/1.4 ui-monospace,monospace;background:var(--card);padding:8px;border-radius:8px;max-height:180px;overflow:auto}
+.msg.defn{align-self:flex-start;background:var(--blue-t);border:2px solid var(--blue);width:92%}
+/* ---------- photo crop ---------- */
+.crop{position:fixed;inset:0;z-index:50;background:#111;color:#fff;display:flex;flex-direction:column}
+.crop[hidden]{display:none}
+.crop-top{display:flex;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px;max-width:760px;width:100%;margin:0 auto}
+.crop-top .x{color:#ddd}.crop-top .muted{color:#bbb}
+.crop-stage{flex:1;display:grid;place-items:center;padding:10px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.crop-stage{position:relative}
+.crop-stage img{max-width:calc(100vw - 40px);max-height:calc(100vh - 200px);display:block;pointer-events:none;-webkit-user-drag:none}
+.crop-wrap{position:relative;line-height:0}
+.crop-box{position:absolute;border:3px solid var(--pink);box-shadow:0 0 0 9999px rgba(0,0,0,.55);border-radius:6px;cursor:move}
+.crop-box i{position:absolute;width:30px;height:30px;background:var(--pink);border:3px solid #fff;border-radius:50%;touch-action:none}
+.crop-box i[data-h="nw"]{left:-17px;top:-17px;cursor:nwse-resize}.crop-box i[data-h="ne"]{right:-17px;top:-17px;cursor:nesw-resize}
+.crop-box i[data-h="sw"]{left:-17px;bottom:-17px;cursor:nesw-resize}.crop-box i[data-h="se"]{right:-17px;bottom:-17px;cursor:nwse-resize}
+.crop-foot{display:flex;gap:8px;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));max-width:760px;width:100%;margin:0 auto}
+.crop-foot .btn{min-height:50px;flex:1;padding:8px 10px;font-size:.92em}
+.crop-foot .btn.pink{flex:1.5}

@@ -22,7 +22,10 @@ const Solver = (() => {
 
   function norm(t) {
     // ignore exam clutter like "(3 marks)" or "Question 7" so it isn't mistaken for part of the question
-    let s = ' ' + String(t).toLowerCase().replace(/\(\s*\d+\s*marks?\s*\)|\[\s*\d+\s*marks?\s*\]|\b\d+\s*marks?\b|total for question\s*\d+[^\n]*|\bquestion\s*\d+\b|\bq\s*\d+\b[.:)]?/g, ' ') + ' ';
+    let s = ' ' + String(t).toLowerCase().replace(/\(\s*\d+\s*marks?\s*\)|\[\s*\d+\s*marks?\s*\]|\b\d+\s*marks?\b|total for question\s*\d+[^\n]*|\bquestion\s*\d+\b|\bq\s*\d+\b[.:)]?/g, ' ')
+      // a question number at the start of a line ("8  The diagram…", "5  Solve…") — only before words questions start with
+      .replace(/(^|\n)\s*\(?\d{1,2}[.)]?\s+(?=(?:the|work|solve|write|find|calculate|here|show|simplify|expand|factorise|round|use|what|how|which|some|there|this|a|an|in|each|complete|draw|explain|give|estimate|list|describe|read|share|increase|decrease|convert|jo|sam|amy|ben)\b)/g, '$1')
+      .replace(/not drawn accurately/g, ' ') + ' ';
     s = s.replace(/[−–—]/g, '-').replace(/÷/g, '/').replace(/×/g, '*').replace(/²/g, '^2').replace(/³/g, '^3').replace(/π/g, 'pi')
       .replace(/(\d),(\d{3})(?!\d)/g, '$1$2').replace(/£\s*/g, '£').replace(/\bdegrees?\b|°/g, '°')
       .replace(/(\d)\s*[x]\s*(\d)/g, (m, a, b) => a + ' * ' + b)
@@ -79,6 +82,18 @@ const Solver = (() => {
 
   /* ---------- handlers ---------- */
   const H = [];
+  // Health & Social Care readings (BTEC Component 3): say which band each reading is in
+  H.push((s) => {
+    const steps = [], found = [];
+    const bmi = s.match(new RegExp(`bmi[^\\d]{0,20}${N}`));
+    if (bmi) { const v = +bmi[1], c = v < 18.5 ? 'underweight' : v < 25 ? 'healthy' : v < 30 ? 'overweight' : v < 40 ? 'obese' : 'severely obese'; found.push(`BMI ${fm(v)} = ${c}`); steps.push(`BMI ${fm(v)}: under 18.5 underweight · 18.5–24.9 healthy · 25–29.9 overweight · 30–39.9 obese · 40+ severely obese → ${c.toUpperCase()}`); }
+    const bp = s.match(/(?:blood pressure|bp)[^\d]{0,20}(\d{2,3})\s*\/\s*(\d{2,3})/);
+    if (bp) { const sy = +bp[1], di = +bp[2], c = sy >= 140 || di >= 90 ? 'high' : sy < 90 || di < 60 ? 'low' : sy <= 120 && di <= 80 ? 'healthy' : 'slightly raised (above ideal, below high)'; found.push(`blood pressure ${sy}/${di} = ${c}`); steps.push(`Blood pressure ${sy}/${di}: about 90/60 to 120/80 is healthy · 140/90 or more is high · below 90/60 is low → ${c.toUpperCase()}`); }
+    const hr = s.match(/(?:resting heart rate|resting pulse|heart rate|pulse)[^\d]{0,20}(\d{2,3})/);
+    if (hr) { const v = +hr[1], c = v < 60 ? 'below the normal range (low)' : v <= 100 ? 'normal' : 'high'; found.push(`resting heart rate ${v} bpm = ${c}`); steps.push(`Resting heart rate ${v} bpm: 60–100 bpm is normal for adults → ${c.toUpperCase()}`); }
+    if (!found.length) return null;
+    return out('Health readings (checked against the ranges in your BTEC course)', found.join('; '), steps, { subj: 'hsc', tip: 'In the exam, say which band the reading is in, then explain the risk (e.g. high blood pressure → heart attack or stroke).' });
+  });
   // % change from A to B
   H.push((s) => {
     const m = s.match(new RegExp(`(?:percentage|percent|%)\\s*(increase|decrease|change|profit|loss)?[^\\d£]*?from\\s+£?${N}\\s+to\\s+£?${N}`)) || s.match(new RegExp(`from\\s+£?${N}\\s+to\\s+£?${N}[^.?]*?(?:percentage|percent|%)`));
@@ -205,7 +220,9 @@ const Solver = (() => {
   H.push((s) => {
     if (!/\bangles?\b|°/.test(s) || /area|hypotenuse|pythag|perimeter/.test(s)) return null;
     const ang = (s.match(/(\d+(?:\.\d+)?)\s*°/g) || []).map((x) => parseFloat(x));
-    const list = ang.length ? ang : nums(s);
+    // photos of diagrams often lose a ° symbol ("62°  48  x"), so if only some have one, use every angle-sized number
+    const all = nums(s).filter((n) => n > 0 && n < 360);
+    const list = ang.length >= 2 || !ang.length ? (ang.length ? ang : all) : all;
     if (/triangle/.test(s) && /isosceles/.test(s) && list.length === 1 && /base|bottom/.test(s) === false) { const t = list[0]; return out('Isosceles triangle', `${fm((180 - t) / 2)}° each`, [`Angles in a triangle add to 180°`, `180 − ${fm(t)} = ${fm(180 - t)}`, `The two base angles are equal: ${fm(180 - t)} ÷ 2 = ${fm((180 - t) / 2)}°`], { tip: 'If the angle you were given is a base angle instead, the other base angle is the same and the top is 180 − 2 × it.' }); }
     if (/triangle/.test(s) && list.length === 2) { const t = 180 - list[0] - list[1]; return out('Missing angle in a triangle', `${fm(t)}°`, [`Angles in a triangle add up to 180°`, `${fm(list[0])} + ${fm(list[1])} = ${fm(list[0] + list[1])}`, `180 − ${fm(list[0] + list[1])} = ${fm(t)}°`]); }
     if (/quadrilateral|four.sided|4.sided|rectangle|trapezium|kite|parallelogram/.test(s) && list.length === 3) { const t = 360 - list.reduce((a, b) => a + b); return out('Missing angle in a quadrilateral', `${fm(t)}°`, [`Angles in a quadrilateral add up to 360°`, `360 − (${list.map(fm).join(' + ')}) = ${fm(t)}°`]); }
@@ -288,7 +305,8 @@ const Solver = (() => {
   // linear equations
   H.push((s) => {
     if (!s.includes('=')) return null;
-    const m = s.match(/([0-9a-z+\-*/^().\s]*[a-z][0-9a-z+\-*/^().\s]*)=([0-9a-z+\-*/^().\s]+)/); if (!m) return null;
+    // one line only, with something on both sides (photos often have an empty "x = ……" answer line)
+    const m = s.match(/([0-9a-z+\-*/^(). \t]*[a-z][0-9a-z+\-*/^(). \t]*)=([ \t]*[0-9a-z(\-][0-9a-z+\-*/^(). \t]*)/); if (!m) return null;
     const clean = (t) => t.replace(/\b(solve|find|work out|what is|for|the|value of|if|when)\b/g, ' ').trim();
     const L = clean(m[1]), R = clean(m[2]);
     const letters = new Set((L + R).match(/[a-z]/g) || []); letters.delete('p'); if (letters.size !== 1) return null;
@@ -305,6 +323,14 @@ const Solver = (() => {
     if (a !== 1) steps.push(`Divide both sides by ${fm(a)}: ${x} = ${fm(-b)} ÷ ${fm(a)} = ${fm(sol)}${Number.isInteger(r3(sol)) ? '' : (niceFrac(sol) ? ` (= ${niceFrac(sol)})` : '')}`);
     steps.push(`Check: put ${x} = ${fm(sol)} back in — both sides equal ${fm(la * sol + lb)} ✓`);
     return out(`Solve ${L} = ${R}`, `${x} = ${fm(sol)}`, steps);
+  });
+  // frequency table total ("How many people were asked altogether?" + rows like "Dog   12")
+  H.push((s) => {
+    if (!/altogether|in total|total number|how many .*(asked|surveyed|voted|people|students|pupils)/.test(s)) return null;
+    const rows = [...s.matchAll(/(?:^|\n)[ \t]*([a-z][a-z ]{0,20}?)[ \t]{2,}(\d+)[ \t]*(?=\n|$)/g)].map((m) => [m[1].trim(), +m[2]]).filter((r) => !/frequency|total|tally/.test(r[0]));
+    if (rows.length < 2) return null;
+    const sum = rows.reduce((t, r) => t + r[1], 0);
+    return out('Total of the frequency table', String(sum), [`Frequency = how many. Add them all up:`, `${rows.map((r) => `${r[0]} ${r[1]}`).join(' + ')} = ${sum}`]);
   });
   // plain arithmetic
   H.push((s) => {

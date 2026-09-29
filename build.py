@@ -5,7 +5,7 @@ src, docs = root / 'src', root / 'docs'
 shell = (src / 'shell.html').read_text(encoding='utf8')
 css = (src / 'app.css').read_text(encoding='utf8')
 data = '\n'.join((src / f).read_text(encoding='utf8') for f in
-                 ['d-kit.js', 'd-maths.js', 'd-englang.js', 'd-englit.js', 'd-hsc.js', 'd-hosp.js'])
+                 ['d-kit.js', 'd-maths.js', 'd-englang.js', 'd-englit.js', 'd-hsc.js', 'd-hosp.js', 'd-glossary.js'])
 app = '\n'.join((src / f).read_text(encoding='utf8') for f in ['app.js', 'solver.js', 'assist.js'])
 frag = shell.replace('/*CSS*/', css).replace('/*DATA*/', data).replace('/*APP*/', app)
 head = ('<!doctype html>\n<html lang="en-GB">\n<head>\n<meta charset="utf-8">\n'
@@ -20,8 +20,8 @@ docs.mkdir(exist_ok=True)
 # ---- service worker: everything needed offline ----
 core = ['./', 'index.html', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'fonts/fonts.css'] + \
        sorted('fonts/' + p.name for p in (docs / 'fonts').glob('*.woff2'))
-heavy = ['ai/webllm.js', 'ai/worker.js', 'ocr/tesseract.min.js', 'ocr/worker.min.js', 'ocr/lang/eng.traineddata.gz'] + \
-        sorted('ocr/core/' + p.name for p in (docs / 'ocr' / 'core').glob('*.wasm.js'))
+heavy = ['ai/webllm.js', 'ai/worker.js', 'ocr/esearch-ocr.js', 'ocr/ort.wasm.min.mjs', 'ocr/ort-wasm-simd-threaded.mjs',
+         'ocr/ort-wasm-simd-threaded.wasm', 'ocr/pp/det.onnx', 'ocr/pp/rec.onnx', 'ocr/pp/dict.txt']
 h = hashlib.sha1()
 for f in core[1:] + heavy: h.update((docs / f).read_bytes())
 ver = h.hexdigest()[:10]

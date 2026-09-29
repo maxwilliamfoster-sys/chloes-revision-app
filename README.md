@@ -27,15 +27,22 @@ Everything below runs on the device, with no internet:
 1. **Maths solver** (`src/solver.js`) works out answers exactly, step by step. It covers percentages, fractions, ratio, equations,
    averages, angles, Pythagoras, circles, area, sequences, rounding, primes/HCF/LCM, units and arithmetic.
 2. **Lesson search** finds the checked facts from this app's own lessons, plus key facts for each set text.
-3. **Offline AI brain**: a small language model ([WebLLM](https://github.com/mlc-ai/web-llm), Qwen3.5) running on the device's GPU (WebGPU).
-   It's a one-time download at home on Wi-Fi: Standard is 1.1 GB (recommended) and Lite is 450 MB. It explains things using 1 and 2, so it sticks to correct facts.
-4. **Photo reader** ([Tesseract.js](https://github.com/naptha/tesseract.js) OCR) reads the text in a photo of a question.
-   It can't read diagrams or graphs.
+3. **Offline AI brain**: a small language model running on the device's GPU through [WebLLM](https://github.com/mlc-ai/web-llm).
+   It explains things using 1 and 2, so it sticks to correct facts. The app picks the model from the device's real WebGPU limits:
+   - **Phone brain** (Qwen2.5-1.5B, 0.9 GB) for phones. They only allow 128–256 MB GPU memory blocks, and bigger models there crash or talk gibberish.
+   - **Laptop brain** (Qwen3.5-2B, 1.1 GB) for laptops and PCs.
+   - **Mini brain** (Llama-3.2-1B, 0.7 GB) as the fallback if memory runs out.
 
-The brain needs a browser with WebGPU (Chrome/Edge on laptops and Android, Safari on iOS 26+).
-Without it, the solver, lesson search and photo reader still work.
+   Every time the brain wakes it runs a quick sense check, and if the brain dies mid-chat it wakes itself again.
+4. **Exact definitions** (`src/d-glossary.js`) and **health-reading bands** (BMI, blood pressure, pulse) come straight from her courses.
+5. **Photo reader**: [PaddleOCR PP-OCRv6](https://github.com/PaddlePaddle/PaddleOCR) running with ONNX Runtime ([eSearch-OCR](https://github.com/xushengfeng/eSearch-OCR)).
+   It works on the phone's processor in about 1 second. Chloe crops and rotates first, and the layout is rebuilt so table rows and diagram labels come out in order.
+   It reads text and numbers, but not the shapes themselves.
 
-Third-party code in `docs/ai` and `docs/ocr` is Apache-2.0 licensed (see the LICENSE files there).
+The brain needs WebGPU (Chrome or Edge on laptops and Android, Safari on iOS 26+).
+Without it, the solver, the definitions, the lesson search and the photo reader still work.
+
+Third-party code and models in `docs/ai` and `docs/ocr` are Apache-2.0 or MIT licensed (see the LICENSE files there).
 
 ## Editing
 - The content is in `src/d-*.js` (maths generators in `d-maths.js`). The engine and UI are in `src/app.js`, and the assistant is in `src/assist.js` and `src/solver.js`.

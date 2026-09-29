@@ -654,11 +654,11 @@ async function fillOfflineStatus() {
   const el = $('#aistatus'); if (!el) return;
   const has = async (u) => { try { return !!(window.caches && await caches.match(new URL(u, location.href).href)); } catch (e) { return false; } };
   const sw = !!(navigator.serviceWorker && navigator.serviceWorker.controller);
-  const [app, ocr, lib] = await Promise.all([has('index.html').then((x) => x || has('./')), has('ocr/lang/eng.traineddata.gz'), has('ai/webllm.js')]);
+  const [app, ocr, lib] = await Promise.all([has('index.html').then((x) => x || has('./')), has('ocr/pp/rec.onnx'), has('ai/webllm.js')]);
   if (typeof aiRefresh === 'function') await aiRefresh();
   const row = (ok, t, sub) => `<div class="switch" style="cursor:default"><span><b>${ok ? '✅' : '⏳'} ${t}</b>${sub ? `<br><span class="muted small">${sub}</span>` : ''}</span></div>`;
   const st = AI.status, m = state.settings.aiModel && AI_MODELS[state.settings.aiModel];
-  const brainTxt = st === 'nogpu' ? 'Not supported on this device (needs WebGPU). Maths solver, photos and lesson search still work offline.' : st === 'ready' ? `${m.name} brain is on and saved on this device.` : st === 'cached' ? `${m.name} brain is saved on this device (wakes up when you open Ask).` : st === 'downloading' ? `Downloading… ${Math.round(AI.progress * 100)}%` : 'Not downloaded yet — open 🤖 Ask at home on Wi-Fi to switch it on.';
+  const brainTxt = st === 'nogpu' ? 'Not supported on this device (needs WebGPU). Maths solver, photos and lesson search still work offline.' : st === 'ready' ? `${m.name} is on and saved on this device.` : st === 'cached' ? `${m.name} is saved on this device (wakes up when you open Ask).` : st === 'wrongmodel' ? `The ${m.name} is too big for this device — open 🤖 Ask on Wi-Fi to switch to the Phone brain.` : st === 'error' ? 'Had a problem starting — open 🤖 Ask to try again.' : st === 'downloading' ? `Downloading… ${Math.round(AI.progress * 100)}%` : 'Not downloaded yet — open 🤖 Ask at home on Wi-Fi to switch it on.';
   el.innerHTML = row(sw && app, 'App & all lessons', sw && app ? 'Saved — works with no internet.' : 'Open the app once with internet to save it.')
     + row(ocr && lib, 'Assistant tools (maths solver, photo reader)', ocr && lib ? 'Saved on this device.' : 'Saving in the background while online…')
     + row(st === 'ready' || st === 'cached', 'Offline AI brain', brainTxt)

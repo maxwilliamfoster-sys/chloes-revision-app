@@ -1,8 +1,8 @@
 /* Chloe's Revision — service worker: keeps the whole app working with no internet.
    (The AI model itself is stored by WebLLM in its own cache after the one-time download.) */
-const VERSION = '61dd13c27a';
+const VERSION = 'ad0e18f7e7';
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png", "fonts/fonts.css", "fonts/AtkinsonHyperlegible-400.woff2", "fonts/AtkinsonHyperlegible-700.woff2", "fonts/Lexend-400-800.woff2", "fonts/Nunito-600-900.woff2"];
-const HEAVY = ["ai/webllm.js", "ai/worker.js", "ocr/tesseract.min.js", "ocr/worker.min.js", "ocr/lang/eng.traineddata.gz", "ocr/core/tesseract-core-lstm.wasm.js", "ocr/core/tesseract-core-relaxedsimd-lstm.wasm.js", "ocr/core/tesseract-core-simd-lstm.wasm.js"];
+const HEAVY = ["ai/webllm.js", "ai/worker.js", "ocr/esearch-ocr.js", "ocr/ort.wasm.min.mjs", "ocr/ort-wasm-simd-threaded.mjs", "ocr/ort-wasm-simd-threaded.wasm", "ocr/pp/det.onnx", "ocr/pp/rec.onnx", "ocr/pp/dict.txt"];
 const CACHE = 'chloe-' + VERSION;
 
 self.addEventListener('install', (e) => {
